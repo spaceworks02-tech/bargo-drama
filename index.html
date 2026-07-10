@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>불꽃 속의 여유 — CookCam Original Drama</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Grotesk:wght@300;400;700&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #120D0A;
+      --ember: #FF7A29;
+      --ember-dim: rgba(255, 122, 41, 0.08);
+      --ember-mid: rgba(255, 122, 41, 0.45);
+      --white: #F5EFE6;
+      --gray: #4A4038;
+      --gray-light: #9C9086;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Noto Sans KR', sans-serif;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    #cursor {
+      position: fixed; width: 10px; height: 10px;
+      background: var(--ember); border-radius: 50%;
+      pointer-events: none; z-index: 9997;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease;
+      mix-blend-mode: difference;
+    }
+    #cursor-ring {
+      position: fixed; width: 36px; height: 36px;
+      border: 1px solid var(--ember-mid); border-radius: 50%;
+      pointer-events: none; z-index: 9996;
+      transform: translate(-50%, -50%);
+      transition: all 0.18s ease;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 48px;
+      background: rgba(18,13,10,0.95);
+      border-bottom: 1px solid var(--gray);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.05em; color: var(--gray-light); }
+    .nav-logo span { color: var(--ember); }
+    .nav-links { display: flex; gap: 4px; align-items: center; }
+    .nav-cta {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 18px; color: var(--gray-light); text-decoration: none;
+      font-size: 13px; letter-spacing: 0.04em; border: none; transition: color 0.25s;
+    }
+    .nav-cta:hover { color: var(--ember); }
+    .nav-cta.filled { border: 1px solid var(--gray); color: var(--white); }
+    .nav-cta.filled:hover { border-color: var(--ember); }
+
+    #hero {
+      position: relative; height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 48px 80px; overflow: hidden;
+    }
+    #hero .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('assets/hero-still.jpg');
+      background-size: cover; background-position: center 35%;
+      filter: saturate(1.05) brightness(0.85);
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(180deg, rgba(18,13,10,0.35), rgba(18,13,10,0.55) 55%, rgba(18,13,10,0.96) 92%),
+        linear-gradient(90deg, rgba(18,13,10,0.55), rgba(18,13,10,0.15) 55%);
+      z-index: 1;
+    }
+    .hero-tag {
+      position: relative; z-index: 2;
+      font-size: 11px; letter-spacing: 0.2em; color: var(--ember);
+      text-transform: uppercase; margin-bottom: 28px;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .hero-title {
+      position: relative; z-index: 2;
+      font-size: clamp(44px, 7vw, 104px); font-weight: 700;
+      line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 36px;
+    }
+    .hero-title em { font-style: normal; color: var(--ember); display: block; }
+    .hero-sub {
+      position: relative; z-index: 2;
+      font-size: clamp(15px, 1.5vw, 18px); color: var(--gray-light);
+      font-weight: 300; max-width: 520px; line-height: 1.8; margin-bottom: 48px;
+    }
+    .hero-actions { position: relative; z-index: 2; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 16px 40px; background: var(--ember); color: #17110c;
+      font-weight: 700; font-size: 14px; letter-spacing: 0.03em;
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-ghost {
+      padding: 16px 32px; border: 1px solid var(--gray); color: var(--gray-light);
+      font-size: 14px; text-decoration: none; letter-spacing: 0.03em; transition: all 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--white); color: var(--white); }
+    .scroll-hint {
+      position: absolute; bottom: 28px; right: 48px; z-index: 2;
+      font-size: 11px; letter-spacing: 0.15em; color: var(--gray-light);
+      text-transform: uppercase; font-family: 'Space Grotesk', sans-serif;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .scroll-hint::before { content: ''; display: block; width: 40px; height: 1px; background: var(--gray-light); animation: scrollLine 2s ease infinite; }
+    @keyframes scrollLine { 0%, 100% { transform: scaleX(1); opacity: 0.5; } 50% { transform: scaleX(0.4); opacity: 1; } }
+
+    section { padding: 140px 48px; position: relative; }
+    .section-number { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 0.2em; color: var(--ember); margin-bottom: 60px; }
+    .divider { width: 100%; height: 1px; background: var(--gray); }
+
+    #manifesto { background: var(--black); }
+    .manifesto-text { font-size: clamp(26px, 4vw, 52px); font-weight: 700; line-height: 1.35; letter-spacing: -0.01em; max-width: 920px; }
+    .manifesto-text .accent { color: var(--ember); }
+    .manifesto-note { margin-top: 40px; font-size: 14px; color: var(--gray-light); max-width: 560px; line-height: 1.9; }
+
+    #synopsis { background: #0e0a08; }
+    .synopsis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    .synopsis-still { position: relative; overflow: hidden; aspect-ratio: 16 / 9; background: #000; box-shadow: 0 0 0 1px var(--gray); }
+    .synopsis-still iframe { width: 100%; height: 100%; display: block; border: none; }
+    .synopsis-still .watch-badge {
+      position: absolute; top: 20px; left: 20px; z-index: 2;
+      font-family: 'Space Grotesk', sans-serif; font-size: 10px; letter-spacing: 0.15em;
+      color: #000; background: var(--ember); padding: 6px 14px; text-transform: uppercase;
+      pointer-events: none;
+    }
+    .synopsis-eyebrow { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 0.2em; color: var(--ember); text-transform: uppercase; margin-bottom: 24px; }
+    .synopsis-title { font-size: clamp(28px, 3.6vw, 44px); font-weight: 900; letter-spacing: -0.02em; margin-bottom: 24px; }
+    .synopsis-body { font-size: 14px; color: var(--gray-light); line-height: 2; margin-bottom: 28px; }
+    .synopsis-body strong { color: var(--white); font-weight: 500; }
+    .tape { display: inline-flex; gap: 10px; flex-wrap: wrap; }
+    .tape span { font-family: 'Space Grotesk', sans-serif; font-size: 12px; letter-spacing: 0.06em; color: var(--gray-light); border: 1px solid var(--gray); padding: 8px 16px; }
+
+    #crosslink { background: #080605; text-align: center; }
+    .crosslink-eyebrow { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 0.2em; color: var(--ember); text-transform: uppercase; margin-bottom: 28px; }
+    .crosslink-title { font-size: clamp(28px, 4vw, 48px); font-weight: 900; letter-spacing: -0.02em; margin-bottom: 20px; }
+    .crosslink-body { font-size: 14px; color: var(--gray-light); line-height: 1.9; max-width: 480px; margin: 0 auto 40px; }
+    .crosslink-card {
+      display: inline-flex; align-items: center; gap: 20px;
+      border: 1px solid var(--gray); padding: 24px 32px;
+      text-decoration: none; color: var(--white); transition: border-color 0.3s, background 0.3s;
+    }
+    .crosslink-card:hover { border-color: var(--ember); background: var(--ember-dim); }
+    .crosslink-card-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: var(--ember); color: #17110c;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 900;
+    }
+    .crosslink-card-text { text-align: left; }
+    .crosslink-card-label { font-family: 'Space Grotesk', sans-serif; font-size: 10px; letter-spacing: 0.15em; color: var(--ember); text-transform: uppercase; margin-bottom: 4px; }
+    .crosslink-card-name { font-size: 18px; font-weight: 700; }
+
+    #brand { background: #0c0908; padding: 140px 48px; }
+    .brand-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: center; }
+    .brand-eyebrow { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 0.2em; color: var(--ember); text-transform: uppercase; margin-bottom: 28px; }
+    .brand-title { font-size: clamp(28px, 3.4vw, 44px); font-weight: 900; letter-spacing: -0.02em; margin-bottom: 24px; }
+    .brand-body { font-size: 14px; color: var(--gray-light); line-height: 2; margin-bottom: 32px; }
+    .brand-checks { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .brand-checks li { font-size: 14px; color: var(--white); display: flex; align-items: baseline; gap: 12px; }
+    .brand-checks li::before { content: '✓'; color: var(--ember); font-weight: 700; flex-shrink: 0; }
+    .brand-card { border: 1px solid var(--gray); padding: 48px 40px; position: relative; }
+    .brand-card-label { font-family: 'Space Grotesk', sans-serif; font-size: 10px; letter-spacing: 0.18em; color: #000; background: var(--ember); padding: 5px 12px; text-transform: uppercase; display: inline-block; margin-bottom: 28px; }
+    .brand-card-name { font-size: 32px; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .brand-card-sub { font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--ember); letter-spacing: 0.08em; margin-bottom: 24px; }
+    .brand-card-desc { font-size: 13px; color: var(--gray-light); line-height: 1.9; }
+
+    #credits { background: var(--black); }
+    .credits-header { margin-bottom: 90px; }
+    .credits-title { font-size: clamp(30px, 4vw, 48px); font-weight: 900; letter-spacing: -0.02em; }
+    .credits-rows { display: flex; flex-direction: column; }
+    .credit-row { display: grid; grid-template-columns: 200px 1fr; gap: 48px; padding: 36px 0; border-top: 1px solid var(--gray); align-items: baseline; }
+    .credit-row:last-child { border-bottom: 1px solid var(--gray); }
+    .credit-role { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 0.15em; color: var(--ember); text-transform: uppercase; }
+    .credit-names { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+    .credit-names span { color: var(--gray-light); font-weight: 300; font-size: 14px; }
+
+    #cta { background: var(--black); text-align: center; padding: 180px 48px; }
+    .cta-label { font-size: 11px; letter-spacing: 0.2em; color: var(--ember); text-transform: uppercase; margin-bottom: 32px; font-family: 'Space Grotesk', sans-serif; }
+    .cta-title { font-size: clamp(36px, 6vw, 84px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 48px; }
+    .cta-title em { font-style: normal; display: block; color: var(--ember); }
+
+    footer { border-top: 1px solid var(--gray); padding: 40px 48px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-logo { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; }
+    .footer-logo span { color: var(--ember); }
+    .footer-info { font-size: 12px; color: var(--gray-light); text-align: right; line-height: 1.8; }
+
+    #top-btn {
+      position: fixed; bottom: 36px; right: 36px; width: 48px; height: 48px;
+      background: var(--ember); color: #17110c; font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 200;
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.3s, transform 0.3s; pointer-events: none;
+    }
+    #top-btn.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    #top-btn:hover { background: #fff; }
+
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    @media (max-width: 900px) {
+      .synopsis-grid { grid-template-columns: 1fr; }
+      .brand-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      #cursor, #cursor-ring { display: none; }
+      nav { padding: 18px 20px; }
+      .nav-links a:not(.filled) { display: none; }
+      #hero { padding: 0 24px 64px; }
+      section { padding: 80px 24px; }
+      .crosslink-card { flex-direction: column; text-align: center; padding: 32px 24px; }
+      .crosslink-card-text { text-align: center; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-info { text-align: center; }
+      .scroll-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <div id="top-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+  <nav>
+    <div class="nav-logo">COOKCAM<span>_DRAMA</span></div>
+    <div class="nav-links">
+      <a href="#synopsis" class="nav-cta">시놉시스</a>
+      <a href="#brand" class="nav-cta">원작 브랜드</a>
+      <a href="https://webtoon.bargo2023.co.kr" class="nav-cta filled">웹툰 보기 →</a>
+    </div>
+  </nav>
+
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-tag">CookCam Original Drama · Pilot</div>
+    <h1 class="hero-title">
+      불꽃 속의<br>
+      <em>여유.</em>
+    </h1>
+    <p class="hero-sub">
+      숯불 위에 고기가 익어가는 시간, 우리는 비로소 멈추는 법을 배웁니다.<br>
+      빠르게 달려온 당신에게 건네는 불꽃처럼 따뜻한 위로, 「불꽃 속의 여유」.
+    </p>
+    <div class="hero-actions">
+      <a href="#synopsis" class="btn-primary">드라마 시청하기</a>
+      <a href="https://webtoon.bargo2023.co.kr" class="btn-ghost">웹툰으로 만나기 →</a>
+    </div>
+    <div class="scroll-hint">scroll</div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="manifesto">
+    <div class="section-number">00 — 기획 의도</div>
+    <p class="manifesto-text reveal">
+      우리는 그을린 고기를 팔지 않습니다.<br>
+      그 앞에 마주 앉은 사람들의 마음을,<br>
+      <span class="accent">영상으로 옮겨 담습니다.</span>
+    </p>
+    <p class="manifesto-note reveal reveal-delay-1">
+      바르고(BARGO)가 직접 제작하는 쿡캠 오리지널 웹드라마 「불꽃 속의 여유」는
+      캠핑과 BBQ를 배경으로, 지친 일상을 내려놓고 자연 속에서 관계를 회복해가는
+      사람들의 이야기를 담습니다.
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="synopsis">
+    <div class="synopsis-grid">
+      <div class="synopsis-still reveal" id="watch-frame">
+        <span class="watch-badge">드라마 시청하기</span>
+        <iframe src="https://www.youtube-nocookie.com/embed/9FIXDKkK9AM" title="쿡캠 오리지널 드라마 불꽃 속의 여유 — 파일럿 에피소드" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div>
+        <div class="synopsis-eyebrow reveal">Synopsis</div>
+        <h2 class="synopsis-title reveal reveal-delay-1">숯불 위에 고기가 익어가는 시간,<br>우리는 비로소 멈추는 법을 배웁니다</h2>
+        <p class="synopsis-body reveal reveal-delay-2">
+          서울의 바쁜 일상에 지친 세 사람이 우연한 기회에 같이 캠핑을 갑니다.
+          숯불을 피우고, 고기를 굽고, 별빛 아래 이야기를 나누며 각자가 잃어버렸던
+          것들을 하나씩 되찾아가는 따뜻한 치유의 여정. 불꽃 속에서 찾아낸 여유가
+          당신의 일상도 조금은 따뜻하게 바꿔줄 것입니다.
+        </p>
+        <div class="tape reveal reveal-delay-3">
+          <span>#캠핑힐링드라마</span>
+          <span>#쿡캠오리지널</span>
+          <span>#첫불의맛</span>
+          <span>#관계와회복</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="crosslink">
+    <div class="crosslink-eyebrow reveal">Also In Webtoon</div>
+    <h2 class="crosslink-title reveal reveal-delay-1">이 이야기, 웹툰으로도 만나보세요</h2>
+    <p class="crosslink-body reveal reveal-delay-2">
+      「불꽃 속의 여유」파일럿 편이 웹툰으로 각색되었습니다.
+      실사 드라마의 색감과 정서를 그대로 살려 그린 웹툰을 지금 바로 읽어보세요.
+    </p>
+    <a href="https://webtoon.bargo2023.co.kr" class="crosslink-card reveal reveal-delay-3">
+      <div class="crosslink-card-icon">웹</div>
+      <div class="crosslink-card-text">
+        <div class="crosslink-card-label">Webtoon Adaptation</div>
+        <div class="crosslink-card-name">webtoon.bargo2023.co.kr →</div>
+      </div>
+    </a>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="brand">
+    <div class="brand-grid">
+      <div>
+        <div class="brand-eyebrow reveal">01 — 원작 브랜드</div>
+        <h2 class="brand-title reveal reveal-delay-1">캠핑 요리 문화를<br>혁신하는 브랜드, 쿡캠</h2>
+        <p class="brand-body reveal reveal-delay-2">
+          쿡캠은 캠핑 요리 문화를 혁신하는 올인원 제품 브랜드입니다.
+          한국의 BBQ 문화를 축제로 선보이는 K-BBQ 페스티벌 「불의 향연」과,
+          자연 속 치유를 담은 캠핑 힐링 드라마 「불꽃 속의 여유」로
+          캠핑의 순간을 계속 이어갑니다.
+        </p>
+        <ul class="brand-checks reveal reveal-delay-3">
+          <li>튀지 않는 숯으로 안전한 설계</li>
+          <li>10분만에 숯불 준비 완료, 초간편 숯불 피우기</li>
+          <li>검게 그을린 고기는 이제 그만, 숯향은 그대로</li>
+          <li>바베큐 파티 이후엔 불멍 키트로 변신</li>
+        </ul>
+      </div>
+      <div class="brand-card reveal reveal-delay-1">
+        <span class="brand-card-label">쿡캠</span>
+        <div class="brand-card-name">올인원 숯 키트</div>
+        <div class="brand-card-sub">COOKCAM · ALL-IN-ONE CHARCOAL KIT</div>
+        <p class="brand-card-desc">
+          초보 캠퍼도 실패 없이 즐기는 올인원 숯 키트.
+          「불꽃 속의 여유」속 캠프파이어 장면도 이 숯 키트에서 시작되었습니다.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="credits">
+    <div class="credits-header">
+      <div class="section-number">02 — 제작 정보</div>
+      <h2 class="credits-title reveal">Original Drama Credits</h2>
+    </div>
+    <div class="credits-rows">
+      <div class="credit-row reveal">
+        <div class="credit-role">제작</div>
+        <div class="credit-names">주식회사 바르고 (BARGO Corp.) <span>— 대표 김선아</span></div>
+      </div>
+      <div class="credit-row reveal reveal-delay-1">
+        <div class="credit-role">장르 · 형식</div>
+        <div class="credit-names">캠핑 힐링 드라마 <span>· OTT 드라마 (Web Drama)</span></div>
+      </div>
+      <div class="credit-row reveal reveal-delay-1">
+        <div class="credit-role">브랜드</div>
+        <div class="credit-names">COOKCAM 오리지널 <span>· 불꽃 속의 여유</span></div>
+      </div>
+      <div class="credit-row reveal reveal-delay-2">
+        <div class="credit-role">제작 현황</div>
+        <div class="credit-names">파일럿 2025년 촬영 완료 <span>· 본편 2026년 3편 제작 진행 중</span></div>
+      </div>
+      <div class="credit-row reveal reveal-delay-3">
+        <div class="credit-role">배급</div>
+        <div class="credit-names">쿡캠 공식 유튜브 <span>@Cookingcamrini · OTT 및 방송 플랫폼 배급 추진</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cta">
+    <div class="cta-label">Cookcam Original</div>
+    <h2 class="cta-title reveal">
+      오늘 밤,
+      <em>불 앞에 앉아보세요.</em>
+    </h2>
+    <a href="https://webtoon.bargo2023.co.kr" class="btn-primary" style="font-size:16px; padding:20px 56px;">웹툰으로 이어보기 →</a>
+  </section>
+
+  <footer>
+    <div class="footer-logo">COOKCAM<span>_DRAMA</span></div>
+    <div class="footer-info">
+      쿡캠 오리지널 드라마 「불꽃 속의 여유」<br>
+      주식회사 바르고 · 경상남도 김해시 관동로 14
+    </div>
+  </footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+    });
+    (function animRing() {
+      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
+    document.querySelectorAll('a, button, #top-btn').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1.6)';
+        ring.style.borderColor = 'rgba(255,122,41,0.85)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.borderColor = 'rgba(255,122,41,0.45)';
+      });
+    });
+    const topBtn = document.getElementById('top-btn');
+    window.addEventListener('scroll', () => { topBtn.classList.toggle('visible', window.scrollY > 400); });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
