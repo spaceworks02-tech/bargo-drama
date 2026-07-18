@@ -130,9 +130,10 @@
     .manifesto-text .accent { color: var(--ember); }
     .manifesto-note { margin-top: 40px; font-size: 14px; color: var(--gray-light); max-width: 560px; line-height: 1.9; }
 
-    #synopsis { background: #0e0a08; }
-    .synopsis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
-    .synopsis-still { position: relative; overflow: hidden; aspect-ratio: 16 / 9; background: #000; box-shadow: 0 0 0 1px var(--gray); }
+    #synopsis, #episode1 { background: #0e0a08; }
+    #episode1 { background: #0b0807; }
+    .synopsis-grid { display: flex; flex-direction: column; gap: 48px; max-width: 880px; margin: 0 auto; }
+    .synopsis-still { position: relative; overflow: hidden; aspect-ratio: 16 / 9; background: #000; box-shadow: 0 0 0 1px var(--gray); width: 100%; }
     .synopsis-still iframe { width: 100%; height: 100%; display: block; border: none; }
     .synopsis-still .watch-badge {
       position: absolute; top: 20px; left: 20px; z-index: 2;
@@ -219,7 +220,6 @@
     .reveal-delay-3 { transition-delay: 0.3s; }
 
     @media (max-width: 900px) {
-      .synopsis-grid { grid-template-columns: 1fr; }
       .brand-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 768px) {
@@ -246,7 +246,8 @@
   <nav>
     <div class="nav-logo">COOKCAM<span>_DRAMA</span></div>
     <div class="nav-links">
-      <a href="#synopsis" class="nav-cta">시놉시스</a>
+      <a href="#synopsis" class="nav-cta">파일럿</a>
+      <a href="#episode1" class="nav-cta">1화 보기</a>
       <a href="#brand" class="nav-cta">원작 브랜드</a>
       <a href="https://webtoon.bargo2023.co.kr" class="nav-cta filled">웹툰 보기 →</a>
     </div>
@@ -254,7 +255,7 @@
 
   <section id="hero">
     <div class="hero-bg"></div>
-    <div class="hero-tag">CookCam Original Drama · Pilot</div>
+    <div class="hero-tag">CookCam Original Drama · Pilot + Episode 1</div>
     <h1 class="hero-title">
       불꽃 속의<br>
       <em>여유.</em>
@@ -264,7 +265,7 @@
       빠르게 달려온 당신에게 건네는 불꽃처럼 따뜻한 위로, 「불꽃 속의 여유」.
     </p>
     <div class="hero-actions">
-      <a href="#synopsis" class="btn-primary">드라마 시청하기</a>
+      <a href="#episode1" class="btn-primary">1화 시청하기</a>
       <a href="https://webtoon.bargo2023.co.kr" class="btn-ghost">웹툰으로 만나기 →</a>
     </div>
     <div class="scroll-hint">scroll</div>
@@ -308,6 +309,35 @@
           <span>#쿡캠오리지널</span>
           <span>#첫불의맛</span>
           <span>#관계와회복</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <section id="episode1">
+    <div class="synopsis-grid">
+      <div class="synopsis-still reveal" id="ep1-watch-frame">
+        <span class="watch-badge">1화 시청하기</span>
+        <iframe src="https://www.youtube-nocookie.com/embed/zf8CBYpB6CU" title="쿡캠 오리지널 드라마 인생은 고기서고기까지 — 1화 '불 피우는 법'" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div>
+        <div class="synopsis-eyebrow reveal">Episode 1 · 불 피우는 법</div>
+        <h2 class="synopsis-title reveal reveal-delay-1">「인생은 고기서고기까지 — 아니!!!!!」<br>본편 1화, 드디어 공개</h2>
+        <p class="synopsis-body reveal reveal-delay-2">
+          웹툰 회사에서 AI에 밀려 번아웃으로 퇴사한 <strong>이고기</strong>.
+          동생의 무심한 한마디 "언니 그냥 엄마 옆에서 고기나 구워!"에 폭발해버린 그녀는
+          퇴직금으로 당근마켓 캠핑장비를 풀세팅하고, 작은 차 한 대만 몰고
+          경남의 한 캠핑장으로 무작정 떠납니다.
+          캠핑장 첫날 밤, 불 하나 제대로 못 피워 혼자 웃음이 터지고 마는데 —
+          "근데... 고기는 왜 이리 맛있냐고."
+        </p>
+        <div class="tape reveal reveal-delay-3">
+          <span>#번아웃퇴사</span>
+          <span>#당근마켓캠핑</span>
+          <span>#무작정출발</span>
+          <span>#인생전환점</span>
         </div>
       </div>
     </div>
@@ -373,15 +403,15 @@
       </div>
       <div class="credit-row reveal reveal-delay-1">
         <div class="credit-role">장르 · 형식</div>
-        <div class="credit-names">캠핑 힐링 드라마 <span>· OTT 드라마 (Web Drama)</span></div>
+        <div class="credit-names">힐링 코미디 · 성장드라마 (앤솔로지) <span>· OTT 6부작, 회당 25분</span></div>
       </div>
       <div class="credit-row reveal reveal-delay-1">
         <div class="credit-role">브랜드</div>
-        <div class="credit-names">COOKCAM 오리지널 <span>· 불꽃 속의 여유</span></div>
+        <div class="credit-names">COOKCAM 오리지널 <span>· 파일럿 「불꽃 속의 여유」 → 본편 「인생은 고기서고기까지」</span></div>
       </div>
       <div class="credit-row reveal reveal-delay-2">
         <div class="credit-role">제작 현황</div>
-        <div class="credit-names">파일럿 2025년 촬영 완료 <span>· 본편 2026년 3편 제작 진행 중</span></div>
+        <div class="credit-names">파일럿 2025년 촬영 완료 <span>· 1화 「불 피우는 법」 공개 · 본편 6부작 중 나머지 회차 순차 공개 예정</span></div>
       </div>
       <div class="credit-row reveal reveal-delay-3">
         <div class="credit-role">배급</div>
