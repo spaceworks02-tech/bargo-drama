@@ -173,15 +173,15 @@ section { padding: 140px 48px; position: relative; }
 .brand-card-sub { font-family: 'Space Grotesk', sans-serif; font-size: 13px; color: var(--ember); letter-spacing: 0.08em; margin-bottom: 24px; }
 .brand-card-desc { font-size: 13px; color: var(--gray-light); line-height: 1.9; }
 
-#credits { background: var(--black); }
-.credits-header { margin-bottom: 90px; }
-.credits-title { font-size: clamp(30px, 4vw, 48px); font-weight: 900; letter-spacing: -0.02em; }
-.credits-rows { display: flex; flex-direction: column; }
-.credit-row { display: grid; grid-template-columns: 200px 1fr; gap: 48px; padding: 36px 0; border-top: 1px solid var(--gray); align-items: baseline; }
-.credit-row:last-child { border-bottom: 1px solid var(--gray); }
-.credit-role { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 0.15em; color: var(--ember); text-transform: uppercase; }
-.credit-names { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
-.credit-names span { color: var(--gray-light); font-weight: 300; font-size: 14px; }
+#credits { background: var(--black); padding: 96px 48px; }
+.credits-header { display: flex; align-items: baseline; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; }
+.credits-header .section-number { margin-bottom: 0; }
+.credits-title { font-size: clamp(20px, 2vw, 26px); font-weight: 700; letter-spacing: -0.01em; color: var(--gray-light); }
+.credits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); border-top: 1px solid var(--gray); border-left: 1px solid var(--gray); }
+.credit-cell { padding: 22px 24px; border-right: 1px solid var(--gray); border-bottom: 1px solid var(--gray); }
+.credit-role { font-family: 'Space Grotesk', sans-serif; font-size: 11px; letter-spacing: 0.15em; color: var(--ember); text-transform: uppercase; margin-bottom: 10px; }
+.credit-names { font-size: 15px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.5; }
+.credit-names span { display: block; margin-top: 4px; color: var(--gray-light); font-weight: 300; font-size: 13px; line-height: 1.6; }
 
 #cta { background: var(--black); text-align: center; padding: 180px 48px; }
 .cta-label { font-size: 11px; letter-spacing: 0.2em; color: var(--ember); text-transform: uppercase; margin-bottom: 32px; font-family: 'Space Grotesk', sans-serif; }
@@ -220,6 +220,12 @@ footer { border-top: 1px solid var(--gray); padding: 40px 48px; display: flex; j
   .nav-links a:not(.filled) { display: none; }
   #hero { padding: 0 24px 64px; }
   section { padding: 80px 24px; }
+  #credits { padding: 64px 16px; }
+  .credits-grid { grid-template-columns: 1fr; }
+  .credit-cell { padding: 14px 16px; display: grid; grid-template-columns: 76px 1fr; gap: 12px; align-items: baseline; }
+  .credit-role { margin-bottom: 0; font-size: 10px; letter-spacing: 0.1em; }
+  .credit-names { font-size: 14px; }
+  .credit-names span { font-size: 12px; }
   .crosslink-card { flex-direction: column; text-align: center; padding: 32px 24px; }
   .crosslink-card-text { text-align: center; }
   footer { flex-direction: column; text-align: center; }

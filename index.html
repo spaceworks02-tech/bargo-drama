@@ -121,26 +121,26 @@
   <section id="credits">
     <div class="credits-header">
       <div class="section-number">03 — 제작 정보</div>
-      <h2 class="credits-title reveal">Original Drama Credits</h2>
+      <h2 class="credits-title">Original Drama Credits</h2>
     </div>
-    <div class="credits-rows">
-      <div class="credit-row reveal">
+    <div class="credits-grid reveal">
+      <div class="credit-cell">
         <div class="credit-role">제작</div>
-        <div class="credit-names">주식회사 바르고 (BARGO Corp.) <span>— 대표 김선아</span></div>
+        <div class="credit-names">주식회사 바르고 <span>BARGO Corp. · 대표 김선아</span></div>
       </div>
-      <div class="credit-row reveal reveal-delay-1">
+      <div class="credit-cell">
         <div class="credit-role">장르 · 형식</div>
-        <div class="credit-names">힐링 코미디 · 성장드라마 (앤솔로지) <span>· OTT 6부작, 회당 20분</span></div>
+        <div class="credit-names">힐링 코미디 · 성장드라마 <span>앤솔로지 · OTT 6부작 · 회당 20분</span></div>
       </div>
-      <div class="credit-row reveal reveal-delay-1">
+      <div class="credit-cell">
         <div class="credit-role">브랜드</div>
-        <div class="credit-names">COOKCAM 오리지널 <span>· 파일럿 「불꽃 속의 여유」 → 본편 「인생은 고기서고기까지」</span></div>
+        <div class="credit-names">COOKCAM 오리지널 <span>파일럿 「불꽃 속의 여유」 → 본편 「인생은 고기서 고기까지」</span></div>
       </div>
-      <div class="credit-row reveal reveal-delay-2">
+      <div class="credit-cell">
         <div class="credit-role">제작 현황</div>
-        <div class="credit-names" id="credit-status">파일럿 2025년 촬영 완료 <span>· 본편 6부작 순차 공개</span></div>
+        <div class="credit-names" id="credit-status">본편 순차 공개 <span>파일럿 2025년 촬영 완료</span></div>
       </div>
-      <div class="credit-row reveal reveal-delay-3">
+      <div class="credit-cell">
         <div class="credit-role">배급</div>
         <div class="credit-names">쿡캠 공식 유튜브 <span>@Cookingcamrini · OTT 및 방송 플랫폼 배급 추진</span></div>
       </div>
@@ -206,7 +206,7 @@
       }
       const relMain = main.filter(e => e.youtube).map(e => e.label);
       document.getElementById('credit-status').innerHTML =
-        `파일럿 2025년 촬영 완료 <span>· 본편 ${relMain.length ? relMain.join('·') + ' 공개' : '순차 공개'} · 6부작 중 나머지 회차 순차 공개 예정</span>`;
+        `${relMain.length ? '본편 ' + relMain.join('·') + ' 공개' : '본편 순차 공개'} <span>파일럿 2025년 촬영 완료 · 나머지 회차 순차 공개 예정</span>`;
     })();
 
     const cursor = document.getElementById('cursor');
