@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>인생은 고기서 고기까지 — 쿡캠 오리지널 드라마</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Space+Grotesk:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body class="watch">
+
+  <nav>
+    <a href="./" class="nav-logo" style="text-decoration:none">COOKCAM<span>_DRAMA</span></a>
+    <div class="nav-links">
+      <a href="./#episodes" class="nav-cta">전체 회차</a>
+      <a href="https://webtoon.bargo2023.co.kr" class="nav-cta filled">웹툰 보기 →</a>
+    </div>
+  </nav>
+
+  <main class="watch-wrap">
+    <div>
+      <div class="player" id="player"></div>
+      <div class="watch-info">
+        <div class="watch-eyebrow" id="w-eyebrow"></div>
+        <h1 class="watch-title" id="w-title"></h1>
+        <p class="watch-desc" id="w-desc"></p>
+        <div class="tape" id="w-tags"></div>
+        <div class="watch-actions">
+          <a class="btn-ghost" id="w-prev">← 이전화</a>
+          <a class="btn-primary" id="w-next">다음화 →</a>
+          <a class="btn-ghost" id="w-webtoon">이 회차 웹툰으로 보기 →</a>
+        </div>
+      </div>
+    </div>
+    <aside class="ep-side-wrap">
+      <div class="ep-side-title">전체 회차</div>
+      <div class="ep-side" id="ep-side"></div>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="footer-logo">COOKCAM<span>_DRAMA</span></div>
+    <div class="footer-info">
+      쿡캠 오리지널 드라마 「불꽃 속의 여유」 · 「인생은 고기서 고기까지」<br>
+      주식회사 바르고 · 경상남도 김해시 관동로 14
+    </div>
+  </footer>
+
+  <script src="episodes.js"></script>
+  <script src="assets/progress.js"></script>
+  <script>
+    const eps = window.EPISODES;
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const want = new URLSearchParams(location.search).get('ep');
+    const released = eps.filter(e => e.youtube);
+    const ep = eps.find(e => e.id === want) || released[released.length - 1] || eps[0];
+    const idx = eps.indexOf(ep);
+    const link = e => `watch.html?ep=${encodeURIComponent(e.id)}`;
+
+    document.title = `${ep.label} ${ep.title} — ${ep.series} | 쿡캠 오리지널 드라마`;
+    document.getElementById('w-eyebrow').textContent = `${ep.label} · ${ep.series} · ${ep.runtime}`;
+    document.getElementById('w-title').textContent = ep.title;
+    document.getElementById('w-desc').textContent = ep.desc;
+    document.getElementById('w-tags').innerHTML = (ep.tags || []).map(t => `<span>#${esc(t)}</span>`).join('');
+
+    function setNav(el, target, text) {
+      if (target) { el.href = link(target); el.textContent = text(target); }
+      else el.classList.add('disabled');
+    }
+    setNav(document.getElementById('w-prev'), eps[idx - 1], e => `← ${e.label}`);
+    setNav(document.getElementById('w-next'), eps[idx + 1], e => `${e.label} →`);
+    const wt = document.getElementById('w-webtoon');
+    if (ep.webtoon) wt.href = `https://webtoon.bargo2023.co.kr/viewer.html?ep=${encodeURIComponent(ep.webtoon)}`;
+    else wt.style.display = 'none';
+
+    document.getElementById('ep-side').innerHTML = eps.map(e => {
+      const soon = !e.youtube;
+      const pct = soon ? 0 : DramaProgress.percent(e.id);
+      return `<a class="ep-row${e === ep ? ' current' : ''}" href="${link(e)}">
+        <div class="ep-row-thumb${soon ? ' is-soon' : ''}"><img src="${esc(e.thumb)}" alt="" loading="lazy">
+          ${pct > 0 ? `<div class="ep-progress" style="position:absolute;left:0;right:0;bottom:0"><span style="width:${pct}%"></span></div>` : ''}
+        </div>
+        <div>
+          <div class="ep-row-label">${esc(e.label)}${e === ep && !soon ? ' · 재생 중' : ''}</div>
+          <div class="ep-row-title">${esc(e.title)}</div>
+          <div class="ep-row-meta">${soon ? '공개 예정' : esc(e.runtime)}</div>
+        </div>
+      </a>`;
+    }).join('');
+
+    const box = document.getElementById('player');
+    if (!ep.youtube) {
+      box.innerHTML = `<img class="poster" src="${esc(ep.thumb)}" alt="">
+        <div class="soon"><strong>${esc(ep.label)} 공개 예정</strong><span>쿡캠 공식 유튜브 @Cookingcamrini 에 곧 공개됩니다</span></div>`;
+    } else {
+      DramaProgress.touch(ep.id);
+      const saved = DramaProgress.get(ep.id);
+      // 끝까지 본 회차는 처음부터, 보다 만 회차는 이어서
+      const start = saved && saved.duration && saved.time < saved.duration - 30 ? Math.max(0, saved.time - 3) : 0;
+      box.innerHTML = '<div id="yt"></div>';
+      window.onYouTubeIframeAPIReady = function () {
+        const player = new YT.Player('yt', {
+          host: 'https://www.youtube-nocookie.com',
+          videoId: ep.youtube,
+          playerVars: { start, rel: 0, playsinline: 1 },
+          events: {
+            onStateChange(ev) {
+              if (ev.data === YT.PlayerState.ENDED) DramaProgress.set(ep.id, player.getDuration(), player.getDuration());
+            },
+          },
+        });
+        setInterval(() => {
+          if (player.getPlayerState && player.getPlayerState() === YT.PlayerState.PLAYING)
+            DramaProgress.set(ep.id, player.getCurrentTime(), player.getDuration());
+        }, 5000);
+      };
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+    }
+  </script>
+</body>
+</html>
